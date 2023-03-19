@@ -60,6 +60,6 @@
       path: /dockerfiles/image-webserver-dockerfile
       push: yes
       username: acrpracticados
-      password: QpSRbXdXFzoCKgoIctd1P7eZNK9Bz5CQ9OOb5dWZbJ+ACRAJ0AiT
+      password: ktvr7ROAEZHzduBgCj3HnFmCGYdkR9zLFsdtBCfCnF+ACRBz94OA
       push_args:
         dest: acrpracticados.azurecr.io

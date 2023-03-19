@@ -7,7 +7,7 @@
   - name: Login to default registry in Azure
     containers.podman.podman_login:
       username: acrpracticados
-      password: QpSRbXdXFzoCKgoIctd1P7eZNK9Bz5CQ9OOb5dWZbJ+ACRAJ0AiT
+      password: ktvr7ROAEZHzduBgCj3HnFmCGYdkR9zLFsdtBCfCnF+ACRBz94OA
       registry: acrpracticados.azurecr.io
   - name: Pull image webserver:v1.0 to vm1
     containers.podman.podman_image:
