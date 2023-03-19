@@ -56,10 +56,10 @@
   - name: Build new image webserver:v1.0 with podman and push to my registry in Azure with podman
     containers.podman.podman_image:
       name: webserver
-      tag: v1.8
+      tag: v1.0
       path: /dockerfiles/image-webserver-dockerfile
       push: yes
-      username: lab01containerregistry
-      password: zMPcv+mxkct8eDdCXujGBvI2juxQSDJVBYVl7qw8uX+ACRCnPrel
+      username: acrpracticados
+      password: QpSRbXdXFzoCKgoIctd1P7eZNK9Bz5CQ9OOb5dWZbJ+ACRAJ0AiT
       push_args:
-        dest: lab01containerregistry.azurecr.io
+        dest: acrpracticados.azurecr.io
