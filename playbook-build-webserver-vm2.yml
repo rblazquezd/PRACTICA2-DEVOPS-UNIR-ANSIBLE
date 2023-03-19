@@ -1,0 +1,65 @@
+---
+- hosts: localhost
+  become: yes
+  become_user: root
+
+  tasks:
+  - name: Creates directory for build new imagen webserver:v1.0
+    file:
+      path: /dockerfiles/image-webserver-dockerfile
+      state: directory
+      owner: root
+      group: root
+      mode: 0644
+      recurse: yes
+  - name: Generate key for webserver
+    command: openssl genrsa -out /dockerfiles/image-webserver-dockerfile/server.key 2048  
+  - name: Create certificate CSR for webserver
+    command: openssl req -key /dockerfiles/image-webserver-dockerfile/server.key -new -out /dockerfiles/image-webserver-dockerfile/server.scr -subj "/CN=vm1/OU=Tema 8/O=DevOps/L=Madrid/ST=Madrid/C=ES"
+  - name: Sign certificate for webserver
+    command: openssl x509 -signkey /dockerfiles/image-webserver-dockerfile/server.key -in /dockerfiles/image-webserver-dockerfile/server.scr -req -days 365 -out /dockerfiles/image-webserver-dockerfile/server.crt 
+  - name: Install apt install apache2-utils for create file credentials
+    command: apt install apache2-utils -y
+  - name: Create file for basic authentication 
+    command: htpasswd -cBb /dockerfiles/image-webserver-dockerfile/.creds usertest test
+  - name: Copy file index.html for new imagen webserver:v1.0
+    copy:
+      src: "index.html"
+      dest: "/dockerfiles/image-webserver-dockerfile/index.html"
+      owner: root
+      group: root
+      mode: 0777
+  - name: Copy file .htaccess for new imagen webserver:v1.0
+    copy:
+      src: ".htaccess"
+      dest: "/dockerfiles/image-webserver-dockerfile/.htaccess"
+      owner: root
+      group: root
+      mode: 0777
+  - name: Copy file httpd.conf for new imagen webserver:v1.0
+    copy:
+      src: "httpd.conf"
+      dest: "/dockerfiles/image-webserver-dockerfile/httpd.conf"
+      owner: root
+      group: root
+      mode: 0777
+  - name: Copy dockerfile for new imagen webserver:v1.0
+    copy:
+      src: "Dockerfile"
+      dest: "/dockerfiles/image-webserver-dockerfile/Dockerfile"
+      owner: root
+      group: root
+      mode: 0777
+  - name: Pull image docker.io/library/httpd:latest with podman
+    containers.podman.podman_image:
+      name: docker.io/library/httpd:latest
+  - name: Build new image webserver:v1.0 with podman and push to my registry in Azure with podman
+    containers.podman.podman_image:
+      name: webserver
+      tag: v1.8
+      path: /dockerfiles/image-webserver-dockerfile
+      push: yes
+      username: lab01containerregistry
+      password: zMPcv+mxkct8eDdCXujGBvI2juxQSDJVBYVl7qw8uX+ACRCnPrel
+      push_args:
+        dest: lab01containerregistry.azurecr.io

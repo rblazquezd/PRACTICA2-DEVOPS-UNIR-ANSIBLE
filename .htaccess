@@ -1,0 +1,4 @@
+AuthType Basic
+AuthName "Restricted Content in webserver uncle Richard"
+AuthUserFile /usr/local/apache2/.creds
+Require valid-user

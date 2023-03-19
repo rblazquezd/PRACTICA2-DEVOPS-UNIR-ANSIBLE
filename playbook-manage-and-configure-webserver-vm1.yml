@@ -1,0 +1,78 @@
+---
+- hosts: webservers
+  become: yes
+  become_user: root
+
+  tasks:
+  - name: Login to default registry in Azure
+    containers.podman.podman_login:
+      username: lab01containerregistry
+      password: zMPcv+mxkct8eDdCXujGBvI2juxQSDJVBYVl7qw8uX+ACRCnPrel
+      registry: lab01containerregistry.azurecr.io
+  - name: Pull image webserver:v1.0 to vm1
+    containers.podman.podman_image:
+      name: lab01containerregistry.azurecr.io/webserver:v1.8
+  - name: Run container webserver:v1.0 in vm1
+    containers.podman.podman_container:
+      name: mywebserver
+      image: lab01containerregistry.azurecr.io/webserver:v1.8
+      state: started
+      detach: true
+      # exposed_ports:
+      #   - "80"
+      ports:
+        - 443:443
+  # - name: Creates directory
+  #   file:
+  #     path: /volumes_podman/httpd/usr/local/apache2/htdocs
+  #     state: directory
+  #     owner: root
+  #     group: root
+  #     mode: 0777
+  #     recurse: yes
+  # - name: Creating a file with content
+  #   copy:
+  #     dest: "/volumes_podman/httpd/usr/local/apache2/htdocs/index.html"
+  #     content: <html>
+  #       <head>
+  #         <title>Webserver - page index.html</title>
+  #       </head>
+  #       <body>
+  #        It's a apache server
+  #       <body>
+  #       </html>
+  # - name: Run container
+  #   containers.podman.podman_container:
+  #     name: container
+  #     image: httpd
+  #     state: started
+  #     detach: true
+  #     exposed_ports:
+  #       - 80
+  #     ports:
+  #       - 80:80
+  #     volumes: /volumes_podman/httpd/usr/local/apache2/htdocs/:/usr/local/apache2/htdocs/
+  # - name: Creates directory
+  #   file:
+  #     path: /dockerfiles/image-webserver-dockerfile
+  #     state: directory
+  #     owner: root
+  #     group: root
+  #     mode: 0644
+  #     recurse: yes
+  # - name: Creating a file with content
+  #   copy:
+  #     dest: "/dockerfiles/image-webserver-dockerfile/index.html"
+  #     content: <html>
+  #       <head>
+  #         <title>Webserver - page index.html</title>
+  #       </head>
+  #       <body>
+  #        It's a apache server
+  #       <body>
+  #       </html>
+  # - name: Creating dockerfile nuevo image
+  #   copy:
+  #     dest: "/dockerfiles/image-webserver-dockerfile/Dockerfile"
+  #     content: FROM httpd:latest
+  #       COPY /dockerfiles/image-webserver-dockerfile/Dockerfile/index.html /usr/local/apache2/htdocs/index.html
